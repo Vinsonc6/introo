@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGO® Store Replica</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom font import and Tailwind configuration */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --lego-red: #d32029;
+            --lego-yellow: #ffcf00;
+            --lego-blue: #0055a5;
+            --lego-dark: #333333;
+        }
+
+        /* Configure Tailwind to use Inter and custom colors */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'lego-red': 'var(--lego-red)',
+                        'lego-yellow': 'var(--lego-yellow)',
+                        'lego-blue': 'var(--lego-blue)',
+                        'lego-dark': 'var(--lego-dark)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+
+        /* Custom styles for logo/branding */
+        .lego-logo-text {
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background-color: var(--lego-red);
+            font-size: 1.5rem;
+            line-height: 1;
+            transform: skewX(-5deg); /* Simple effect to mimic the logo box */
+        }
+
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Style for the rotating banner dots */
+        .dot {
+            transition: background-color 0.3s;
+        }
+        .dot.active {
+            background-color: var(--lego-red);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-lego-dark">
+
+    <!-- Header Section (Top Bar) -->
+    <header class="shadow-md bg-white sticky top-0 z-50">
+        <!-- Top Nav Bar -->
+        <div class="bg-lego-red text-white text-xs py-1 text-center">
+            FREE SHIPPING on orders over $35 | LEGO® Insiders earn points!
+        </div>
+
+        <!-- Main Navigation Bar -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-8">
+                <a href="#" class="flex-shrink-0">
+                    <span class="lego-logo-text">LEGO</span>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-6 text-sm font-semibold">
+                    <a href="#" class="hover:text-lego-red transition">Themes</a>
+                    <a href="#" class="hover:text-lego-red transition">New</a>
+                    <a href="#" class="hover:text-lego-red transition">Exclusives</a>
+                    <a href="#" class="hover:text-lego-red transition">Gifts</a>
+                    <a href="#" class="hover:text-lego-red transition text-lego-blue">Sale</a>
+                </div>
+            </div>
+
+            <!-- Search, Account, Cart Icons -->
+            <div class="flex items-center space-x-4">
+                <!-- Search Input (Desktop) -->
+                <div class="relative hidden sm:block">
+                    <input type="text" placeholder="Search products..." class="w-48 md:w-64 border border-gray-300 rounded-md py-2 pl-10 pr-4 text-sm focus:border-lego-red focus:ring-1 focus:ring-lego-red transition">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                </div>
+                
+                <!-- Mobile Search Button -->
+                <button class="sm:hidden p-2 rounded-full hover:bg-gray-100 transition">
+                    <i data-lucide="search" class="w-6 h-6 text-lego-dark"></i>
+                </button>
+
+                <!-- Account Button -->
+                <button class="p-2 rounded-full hover:bg-gray-100 transition">
+                    <i data-lucide="user" class="w-6 h-6 text-lego-dark"></i>
+                </button>
+
+                <!-- Cart Button -->
+                <button id="cart-button" class="relative p-2 rounded-full hover:bg-gray-100 transition">
+                    <i data-lucide="shopping-cart" class="w-6 h-6 text-lego-dark"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-lego-red text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">3</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Mobile/Tablet Secondary Menu -->
+        <div class="lg:hidden bg-gray-100 border-t border-gray-200">
+             <div class="flex justify-around text-xs font-semibold py-2 max-w-lg mx-auto">
+                <a href="#" class="text-lego-red">Themes</a>
+                <a href="#">New</a>
+                <a href="#">Exclusives</a>
+                <a href="#">Gifts</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Hero Banner/Carousel -->
+        <section class="mb-12 relative overflow-hidden rounded-xl shadow-lg bg-gray-200 h-96">
+            <div id="hero-carousel" class="flex w-[300%] h-full transition-transform duration-700 ease-in-out">
+                <!-- Banner 1 -->
+                <div class="w-1/3 flex items-center justify-center bg-lego-blue p-8 relative">
+                    <img src="https://placehold.co/1000x500/0055a5/ffffff?text=NEW+STAR+WARS+SET" onerror="this.src='https://placehold.co/1000x500/0055a5/ffffff?text=NEW+STAR+WARS+SET'" alt="Star Wars Set Banner" class="absolute inset-0 w-full h-full object-cover opacity-70">
+                    <div class="relative z-10 text-center text-white p-6 rounded-lg bg-black bg-opacity-30">
+                        <h2 class="text-4xl md:text-5xl font-extrabold mb-2">The Falcon Has Landed!</h2>
+                        <p class="text-lg md:text-xl font-medium mb-4">Shop the massive 7,500+ piece Millennium Falcon.</p>
+                        <button class="bg-lego-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-xl transition transform hover:scale-105">
+                            Shop Now
+                        </button>
+                    </div>
+                </div>
+                <!-- Banner 2 -->
+                <div class="w-1/3 flex items-center justify-center bg-lego-yellow p-8 relative">
+                    <img src="https://placehold.co/1000x500/ffcf00/333333?text=INSIDERS+DOUBLE+POINTS" onerror="this.src='https://placehold.co/1000x500/ffcf00/333333?text=INSIDERS+DOUBLE+POINTS'" alt="Insiders Points Banner" class="absolute inset-0 w-full h-full object-cover opacity-70">
+                    <div class="relative z-10 text-center text-lego-dark p-6 rounded-lg bg-white bg-opacity-70">
+                        <h2 class="text-4xl md:text-5xl font-extrabold mb-2 text-lego-red">Double Points Event!</h2>
+                        <p class="text-lg md:text-xl font-medium mb-4">Insiders earn 2x points on all purchases this week.</p>
+                        <button class="bg-lego-blue hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-xl transition transform hover:scale-105">
+                            Join Insiders
+                        </button>
+                    </div>
+                </div>
+                <!-- Banner 3 -->
+                <div class="w-1/3 flex items-center justify-center bg-gray-800 p-8 relative">
+                    <img src="https://placehold.co/1000x500/333333/ffffff?text=CITY+COLLECTION" onerror="this.src='https://placehold.co/1000x500/333333/ffffff?text=CITY+COLLECTION'" alt="City Collection Banner" class="absolute inset-0 w-full h-full object-cover opacity-70">
+                    <div class="relative z-10 text-center text-white p-6 rounded-lg bg-black bg-opacity-30">
+                        <h2 class="text-4xl md:text-5xl font-extrabold mb-2">Explore LEGO® City</h2>
+                        <p class="text-lg md:text-xl font-medium mb-4">New police and fire sets are here!</p>
+                        <button class="bg-lego-yellow hover:bg-yellow-600 text-lego-dark font-bold py-3 px-8 rounded-lg shadow-xl transition transform hover:scale-105">
+                            View Theme
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Carousel Indicators -->
+            <div id="carousel-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                <span data-slide="0" class="dot w-3 h-3 bg-white rounded-full cursor-pointer active shadow-md"></span>
+                <span data-slide="1" class="dot w-3 h-3 bg-white rounded-full cursor-pointer shadow-md"></span>
+                <span data-slide="2" class="dot w-3 h-3 bg-white rounded-full cursor-pointer shadow-md"></span>
+            </div>
+        </section>
+
+        <!-- Product Grid Section -->
+        <section class="mb-12">
+            <h3 class="text-3xl font-bold text-center mb-8">Popular Sets Right Now</h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                <!-- Product Card 1 -->
+                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer flex flex-col">
+                    <div class="relative p-4 bg-gray-100 flex justify-center items-center h-48">
+                        <img src="https://placehold.co/300x200/cccccc/333333?text=Architecture+Set" onerror="this.src='https://placehold.co/300x200/cccccc/333333?text=Architecture+Set'" alt="Architecture Set" class="max-h-full max-w-full object-contain">
+                        <span class="absolute top-3 left-3 bg-lego-yellow text-lego-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">NEW</span>
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Architecture</p>
+                            <h4 class="font-semibold text-lg mb-2 truncate" title="Famous Landmark Collection">Famous Landmark Collection</h4>
+                        </div>
+                        <div class="mt-auto">
+                            <p class="text-xl font-bold text-lego-red mb-3">$149.99</p>
+                            <button class="w-full bg-lego-red hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition transform hover:shadow-xl hover:scale-[1.02] text-sm" onclick="addToCart()">
+                                <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-2"></i>Add to Bag
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer flex flex-col">
+                    <div class="relative p-4 bg-gray-100 flex justify-center items-center h-48">
+                        <img src="https://placehold.co/300x200/404040/ffffff?text=Technic+Car" onerror="this.src='https://placehold.co/300x200/404040/ffffff?text=Technic+Car'" alt="Technic Car" class="max-h-full max-w-full object-contain">
+                        <span class="absolute top-3 right-3 bg-lego-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">INSIDER EXCLUSIVE</span>
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Technic</p>
+                            <h4 class="font-semibold text-lg mb-2 truncate" title="Ultimate Race Car 42151">Ultimate Race Car 42151</h4>
+                        </div>
+                        <div class="mt-auto">
+                            <p class="text-xl font-bold text-lego-dark mb-3">$299.99</p>
+                            <button class="w-full bg-lego-red hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition transform hover:shadow-xl hover:scale-[1.02] text-sm" onclick="addToCart()">
+                                <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-2"></i>Add to Bag
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 3 -->
+                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer flex flex-col">
+                    <div class="relative p-4 bg-gray-100 flex justify-center items-center h-48">
+                        <img src="https://placehold.co/300x200/808080/ffffff?text=Flower+Bouquet" onerror="this.src='https://placehold.co/300x200/808080/ffffff?text=Flower+Bouquet'" alt="Flower Bouquet" class="max-h-full max-w-full object-contain">
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Botanical Collection</p>
+                            <h4 class="font-semibold text-lg mb-2 truncate" title="Flower Bouquet 10280">Flower Bouquet 10280</h4>
+                        </div>
+                        <div class="mt-auto">
+                            <p class="text-xl font-bold text-lego-dark mb-3">$59.99</p>
+                            <button class="w-full bg-lego-red hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition transform hover:shadow-xl hover:scale-[1.02] text-sm" onclick="addToCart()">
+                                <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-2"></i>Add to Bag
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 4 -->
+                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer flex flex-col">
+                    <div class="relative p-4 bg-gray-100 flex justify-center items-center h-48">
+                        <img src="https://placehold.co/300x200/3498db/ffffff?text=Castle+Set" onerror="this.src='https://placehold.co/300x200/3498db/ffffff?text=Castle+Set'" alt="Classic Castle Set" class="max-h-full max-w-full object-contain">
+                        <span class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">SALE 20% OFF</span>
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <div>
+                            <p class="text-sm text-gray-500 mb-1">Icons</p>
+                            <h4 class="font-semibold text-lg mb-2 truncate" title="Lion Knights' Castle">Lion Knights' Castle</h4>
+                        </div>
+                        <div class="mt-auto">
+                            <p class="text-xl font-bold text-lego-dark mb-3">
+                                <span class="text-gray-400 line-through mr-2 text-base">$399.99</span>
+                                <span class="text-lego-red">$319.99</span>
+                            </p>
+                            <button class="w-full bg-lego-red hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition transform hover:shadow-xl hover:scale-[1.02] text-sm" onclick="addToCart()">
+                                <i data-lucide="shopping-bag" class="w-4 h-4 inline mr-2"></i>Add to Bag
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="bg-white border-2 border-lego-blue text-lego-blue hover:bg-lego-blue hover:text-white font-bold py-3 px-12 rounded-full transition transform hover:scale-105 shadow-md">
+                    Explore All Products
+                </button>
+            </div>
+        </section>
+
+        <!-- Call to Action Banner -->
+        <section class="mb-12 bg-lego-yellow p-8 md:p-12 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-6 md:mb-0 md:mr-8 text-center md:text-left">
+                <h3 class="text-3xl font-extrabold text-lego-dark mb-2">Build Your Own Adventure</h3>
+                <p class="text-lg text-lego-dark font-medium">Download free building instructions and unleash your creativity!</p>
+            </div>
+            <button class="bg-lego-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-xl transition transform hover:scale-105">
+                <i data-lucide="download" class="w-5 h-5 inline mr-2"></i>Get Inspired
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-lego-dark text-white pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <!-- Column 1 -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 text-lego-yellow">About Us</h5>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white transition">The LEGO Group</a></li>
+                        <li><a href="#" class="hover:text-white transition">LEGO News</a></li>
+                        <li><a href="#" class="hover:text-white transition">Sustainability</a></li>
+                    </ul>
+                </div>
+                <!-- Column 2 -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 text-lego-yellow">Support</h5>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Shipping & Returns</a></li>
+                        <li><a href="#" class="hover:text-white transition">Find a Store</a></li>
+                    </ul>
+                </div>
+                <!-- Column 3 -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 text-lego-yellow">Attractions</h5>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white transition">LEGOLAND Parks</a></li>
+                        <li><a href="#" class="hover:text-white transition">LEGO House</a></li>
+                    </ul>
+                </div>
+                <!-- Column 4 -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 text-lego-yellow">Join Us</h5>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white transition">LEGO Insiders</a></li>
+                        <li><a href="#" class="hover:text-white transition">Affiliate Program</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Bottom Line -->
+            <div class="border-t border-gray-700 pt-6 mt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
+                <p>&copy; 2024 The LEGO Group. All rights reserved.</p>
+                <div class="mt-4 sm:mt-0 space-x-4">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">Terms of Use</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Carousel and Cart Simulation -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. Carousel Logic
+        let currentSlide = 0;
+        const carousel = document.getElementById('hero-carousel');
+        const dotsContainer = document.getElementById('carousel-dots');
+        const dots = dotsContainer.querySelectorAll('.dot');
+        const totalSlides = dots.length;
+
+        function updateCarousel() {
+            // Calculate the necessary translation percentage
+            const offset = currentSlide * -100;
+            carousel.style.transform = `translateX(${offset}%)`;
+
+            // Update active dot indicator
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'bg-lego-red');
+                if (index === currentSlide) {
+                    dot.classList.add('active', 'bg-lego-red');
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        // Set up automatic rotation
+        let carouselInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+        // Add event listeners for dot clicks
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                // Clear the auto-rotation interval on manual click
+                clearInterval(carouselInterval);
+                currentSlide = parseInt(dot.getAttribute('data-slide'));
+                updateCarousel();
+                // Restart auto-rotation after manual interac
